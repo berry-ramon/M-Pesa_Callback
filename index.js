@@ -418,23 +418,26 @@ const authenticate = async (req, res, next) => {
 };
 
 // M-Pesa Callback Handler
-app.post("/api/mpesa/callback/:username", authenticate, async (req, res) => {
+app.post("/api/mpesa/callback/:username", async (req, res) => {
   try {
     const { username } = req.params;
 
     // Check if the user exists in the database
     const user = await User.findOne({ username });
     if (!user) {
+      console.log("User not found");
       return res.status(404).json({ error: "User not found" });
     }
 
     // Ensure the authenticated user matches the username in the URL
     if (req.user.username !== username) {
+      console.log("Unauthorized user");
       return res.status(403).json({ error: "Unauthorized user" });
     }
 
     const callbackData = req.body;
     if (!callbackData?.Body?.stkCallback) {
+      console.log("Invalid callback data");
       return res.status(400).json({ error: "Invalid callback data" });
     }
 
