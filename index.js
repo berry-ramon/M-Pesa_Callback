@@ -35,7 +35,14 @@ const CallbackSchema = new mongoose.Schema({
 const Callback = mongoose.model("Callback", CallbackSchema);
 
 app.use(bodyParser.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: "*", // Allow all origins
+    credentials: true, // Allow cookies or credentials
+  })
+);
+
+app.options("*", cors()); // Enable preflight for all routes
 app.use(morgan("dev"));
 app.use(cookieParser()); // Enable cookie parsing middleware
 
@@ -379,7 +386,7 @@ app.get("/api/auth/validate", async (req, res) => {
       .status(500)
       .json({ error: "Unexpected server error during token validation" });
   }
-});;
+});
 
 // Middleware to authenticate users
 const authenticate = async (req, res, next) => {
