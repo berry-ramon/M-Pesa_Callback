@@ -168,7 +168,16 @@ app.get("/api/auth/verify/:token", async (req, res) => {
       `,
     });
 
-    res.status(200).json({ message: "Account verified!", token: authToken });
+    // Send the token and user info as a response
+    res.status(200).json({
+      message: "Login successful",
+      token: authToken,
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+      },
+    });
   } catch (error) {
     console.error("Error verifying user:", error);
     res.status(500).json({ error: "Internal server error" });
